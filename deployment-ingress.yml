@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pesbuk
+  namespace: pesbuk
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: pesbuk
+  template:
+    metadata:
+      labels:
+        name: pesbuk
+    spec:
+      containers:
+      - name: pesbuk
+        image: johnojss/pesbuk:v3
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pesbuk
+  namespace: pesbuk
+spec:
+  #type: LoadBalancer
+  ports:
+    #- targetPort: 80
+    - port: 8080
+  selector:
+    name: pesbuk
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: pesbuk-ingress
+  namespace: pesbuk
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: pesbuk.jokoss.site
+    http:
+      paths:
+      #- path: /belajar
+      - backend:
+          serviceName: pesbuk
+          servicePort: 8080

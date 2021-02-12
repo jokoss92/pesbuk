@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pesbuk
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: pesbuk
+  template:
+    metadata:
+      labels:
+        name: pesbuk
+    spec:
+      containers:
+      - name: pesbuk
+        image: johnojss/pesbuk:v3
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pesbuk
+spec:
+  type: LoadBalancer
+  ports:
+    #- targetPort: 80
+    - port: 80
+  selector:
+    name: pesbuk
